@@ -1,0 +1,28 @@
+{
+  // Run the app in a production environment. The default value is "development".
+  "environment": "development",
+  // Run Passenger on port 80, the standard HTTP port.
+  "port": 80,
+  // Tell Passenger to daemonize into the background.
+  "daemonize": false,
+  // Tell Passenger to run the app as the given user. Only has effect
+  // if Passenger was started with root privileges.
+  "user": "myappuser",
+  "nginx_config_template": "nginx.conf.erb",
+  // Default as of 5.2.1
+  "concurrency_model": "process",
+  "thread_count": 1,
+  "turbocaching": false,
+  // Default as of 5.2.1, for readiness-probe
+  "defer_port_binding": true,
+  // Do prefork, default as of 5.2.1
+  "spawn_method": "smart",
+  // Standalone integration with nginx engine, default as of 5.2.1, allows use of ./nginx.conf.erb
+  "engine": "nginx",
+  // Do not unnecessary stop preloaders. Recover from stopped workers quicker
+  "max_preloader_idle_time": 0,
+  // Do not unnecessary stop workers. Keep responding quicker
+  "pool_idle_time": 0,
+  // Notes:
+  // Set PASSENGER_(MIN|MAX)_INSTANCE, along with k8s pod memory request/limit plus 
+}

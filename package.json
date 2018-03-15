@@ -1,0 +1,5 @@
+{
+  "name": "kubeaws-cicd-pipeline-rails",
+  "private": true,
+  "dependencies": {}
+}

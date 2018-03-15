@@ -1,3 +1,8 @@
+## References
+
+- [How we've made Phusion Passenger 5 ("Raptor") up to 4x faster than Unicorn, up to 2x faster than Puma, Torquebox](https://www.rubyraptor.org/how-we-made-raptor-up-to-4x-faster-than-unicorn-and-up-to-2x-faster-than-puma-torquebox/#slow_client_problem)
+- [nginx - Expose phusion passenger-status via http - Stack Overflow](https://stackoverflow.com/questions/49071265/expose-phusion-passenger-status-via-http0
+
 ## Installation
 
 ### Generate GitHHub token

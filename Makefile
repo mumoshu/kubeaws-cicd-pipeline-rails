@@ -21,3 +21,12 @@ deploy:
 .PHONY: dockerpush
 dockerpush:
 	UPLOAD_ONLY=1 ship/build/scripts/dockerbuild
+
+# https://www.phusionpassenger.com/library/config/standalone/intro.html#nginx-configuration-template
+# https://www.phusionpassenger.com/library/config/standalone/reference/#--nginx-config-template-nginx_config_template
+nginx.conf.erb:
+	sh -c 'cp $(bundle exec passenger-config about resourcesdir)/templates/standalone/config.erb nginx.conf.erb'
+
+.PHONY: baseimage-docker
+baseimage-docker:
+	sh -c 'cd baseimage-docker && env DISABLE_SSH=1 DISABLE_CRON=1 make build'
