@@ -1,25 +1,22 @@
-FROM golang:1.10-alpine AS build-artifacts
-
-RUN apk add --update --no-cache bash make
+# https://hub.docker.com/r/phusion/passenger-ruby23/
+FROM phusion/passenger-ruby23:0.9.29 AS builder
 
 ADD . /src
 WORKDIR /src
 
-ARG GITHUB_USERNAME
-ARG GITHUB_ORG
+# add the authorized host key for github (avoids "Host key verification failed")
+RUN mkdir -p ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
-# For scripting languages like Ruby, which has a convention not to vendor library dependencies
-# hence requires private git repositories access inside build context
-COPY scripts/git-credential-github-token /usr/local/bin
-RUN apk add --update --no-cache git && \
-  git config --global url."https://github.com/$GITHUB_ORG/".insteadOf ssh://git@github.com/$GITHUB_ORG/ && \
-  git config --global credential.helper github-token
+ARG host
+ARG port
+ENV PRIVATE_KEY /root/.ssh/id_rsa
+RUN curl -o $PRIVATE_KEY http://$host:port/v1/secrets/file/id_rsa \
+  && chmod 0600 $PRIVATE_KEY \
+  && ssh -T git@github.com \
+  bundle install --path vendor/bundle \
+  && rm $PRIVATE_KEY
 
-# Work-around to safely pass secrets from host to build context
-ARG FTP_PROXY
-
-RUN bash -c 'env GITHUB_USERNAME=$GITHUB_USERNAME GITHUB_ORG=$GITHUB_ORG SECRET=$(echo $FTP_PROXY | cut -d : -f 2) FTP_PROXY= make binary'
-
-FROM alpine AS runtime
-COPY --from=build-artifacts /src/myhttpserver /usr/local/bin/myhttpserver
-CMD ["/usr/local/bin/myhttpserver"]
+FROM phusion/passenger-ruby23:0.9.29 AS runtime
+COPY --from=builder /src /app
+WORKDIR /app
+CMD ["bundle exec rails s"]

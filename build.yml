@@ -1,0 +1,17 @@
+build:
+    version: 2016-03-14
+    steps:
+      builder:
+        name: builder
+        dockerfile: Dockerfile
+        target: builder
+        secrets:
+          id_rsa:
+            type: file
+            value: _env(HOME)/.ssh/id_rsa
+      runtime:
+        name: runtime
+        dockerfile: Dockerfile
+        target: runtime
+        depends_on:
+          - builder
