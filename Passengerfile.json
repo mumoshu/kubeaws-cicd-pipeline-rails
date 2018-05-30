@@ -22,7 +22,7 @@
   // Do not unnecessary stop preloaders. Recover from stopped workers quicker
   "max_preloader_idle_time": 0,
   // Do not unnecessary stop workers. Keep responding quicker
-  "pool_idle_time": 0,
+  "pool_idle_time": 0
   // Notes:
   // Set PASSENGER_(MIN|MAX)_INSTANCE, along with k8s pod memory request/limit plus 
 }

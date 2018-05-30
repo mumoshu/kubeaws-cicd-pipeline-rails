@@ -62,6 +62,16 @@ http {
 
     <% for app in @apps %>
     server {
+        # 9090 is only for exposing Prometheus metrics
+        listen 9090;
+        location /metrics {
+            if ($server_port != 9090) {
+              error_page 404 /404.html;
+              return 404;
+              break;
+            }
+        }
+
         <%= include_passenger_internal_template('server.erb', 8, true, binding) %>
         <%= include_passenger_internal_template('rails_asset_pipeline.erb', 8, false) %>
 
